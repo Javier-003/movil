@@ -16,77 +16,33 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  //controladores para los campos de texto
   final emailController = TextEditingController();
 
   final passwordController = TextEditingController();
 
-  //método para iniciar sesión del usuario
   void signUserIn() async {
-    // Datos que queremos mostrar (solo debug)
-    final email = emailController.text.trim();
-    final password = passwordController.text;
-
-    // Enmascarar contraseña para evitar exposición completa en logs
-    String maskPassword(String p) {
-      if (p.isEmpty) return '(empty)';
-      final visible = 2; // cuántos caracteres mostrar al final
-      final shown =
-          p.length <= visible ? p : '***' + p.substring(p.length - visible);
-      return shown;
-    }
-
-    // Imprimir lo que se enviará (modo debug)
-    print('DEBUG -> Intentando iniciar sesión con:');
-    print('  email: $email');
-    print(
-        '  password (masked): ${maskPassword(password)}'); // nunca prints la contraseña completa en logs públicos
-
     // show loading circle
     showDialog(
-      context: context,
-      builder: (context) {
-        return const Center(
-          child: CircularProgressIndicator(),
-        );
-      },
-    );
+        context: context,
+        builder: (context) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        });
 
     try {
-      // Llamada a Firebase (envía por HTTPS internamente)
-      UserCredential cred =
-          await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: email,
-        password: password,
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: emailController.text,
+        password: passwordController.text,
       );
-
-      // pop the loading circle
+      //pop the loading circle
       Navigator.pop(context);
-
-      // Información devuelta por Firebase
-      final user = cred.user;
-      print('DEBUG -> signInWithEmailAndPassword success');
-      print('  user.uid: ${user?.uid}');
-      print('  user.email: ${user?.email}');
-
-      // Obtener token de identificación (ID token) — sensible
-      final idToken = await user?.getIdToken();
-      print('  idToken (sensitive): $idToken');
-
-      // Redirigir al home
       Navigator.pushReplacementNamed(context, '/');
     } on FirebaseAuthException catch (e) {
-      // pop the loading circle
+      //pop the loading circle
       Navigator.pop(context);
 
-      // Imprimir error detallado en consola (solo debug)
-      print(
-          'DEBUG -> FirebaseAuthException: code=${e.code}, message=${e.message}');
       genericErrorMessage(e.code);
-    } catch (e) {
-      Navigator.pop(context);
-      print('DEBUG -> Exception inesperada: $e');
-      genericErrorMessage('Ocurrió un error inesperado');
     }
   }
 
@@ -108,7 +64,7 @@ class _LoginPageState extends State<LoginPage> {
       },
     );
   }
-  //frontend de la pagina de login
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -201,7 +157,6 @@ class _LoginPageState extends State<LoginPage> {
                   children: [
                     //google buttom
                     SquareTile(
-                      //inciar sesion con google
                       onTap: () => AuthService().signInWithGoogle(),
                       imagePath: 'lib/icons/google.svg',
                       height: 70,

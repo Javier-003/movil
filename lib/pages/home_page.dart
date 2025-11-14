@@ -72,7 +72,7 @@ class _HomePageState extends State<HomePage> {
   /// Vista principal con la lista de productos
   Widget _buildProductosView() {
     return FutureBuilder(
-      future: getproductos(),
+      future: getProductos(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           final productos = snapshot.data!;
@@ -105,7 +105,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                         TextButton(
                           onPressed: () {
-                            deleteproducto(producto['id']);
+                            deleteProducto(producto['id']);
                             Navigator.of(context).pop(true);
                           },
                           child: const Text('Eliminar'),

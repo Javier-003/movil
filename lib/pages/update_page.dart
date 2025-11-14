@@ -71,7 +71,7 @@ class _UpdatePageState extends State<UpdatePage> {
                 height: 10,
               ),
               ElevatedButton(
-                  onPressed: () async { await updateproducto(args["id"],nombreController.text,
+                  onPressed: () async { await updateProducto(args["id"],nombreController.text,
                    categoriaController.text, 
                    precioController.text).then((value) {
                     Navigator.pop(context,'/');
