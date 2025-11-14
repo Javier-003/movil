@@ -12,6 +12,7 @@ class HomePage extends StatefulWidget {
 }
  //Estado de la página principal con navegación inferior
 class _HomePageState extends State<HomePage> {
+  // Obtener el usuario actualmente autenticado
   final user = FirebaseAuth.instance.currentUser!;
   int _paginaActual = 0;
 
